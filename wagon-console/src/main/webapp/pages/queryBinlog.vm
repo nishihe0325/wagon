@@ -1,0 +1,113 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">查询binlog信息</div>
+			<form class="form-inline" role="lockForm" method="post" action="/queryBinlog">
+				<table class="table table-hover">
+					<tbody>
+					
+					
+					
+						<!-- query condition start-->
+						<tr>
+							<table class="table table-bordered table-hover">
+								<tbody>
+									<tr>
+										<td><label><font color="#DC483A">canal服务:</font></label>
+                                        	<div class="form-group">
+                                        		<select class="form-control" name="canalAddr" id="canalAddr">
+                                                	<option value=""></option>
+                                                        #if($canalServers)
+															#foreach($canalServer in $canalServers)
+                                                            	#set($canalAddr=$!{canalServer.canalHost}+":"+$!{canalServer.canalPort})
+                                                            	#set($canalAddrShow=$!{canalServer.canalHostName}+":"+$!{canalServer.canalPort})
+                                                                <option value="$canalAddr">$canalAddrShow</option>
+                                                            #end
+                                                       #end
+                                           		</select>
+                                           	</div>
+                                        </td>
+										<td width="50%"> 
+											<label><font color="#DC483A">表名:</font></label>
+											<div class="form-group"> <input type="text" class="form-control" name="tableName" value="$!tableName" size="30"></div>
+										</td>
+									</tr>
+									<tr>	
+										<td> 
+											<label><font color="#DC483A">开始时间:</font></label>
+											<div class="form-group"> <input type="text" class="form-control" name="startTime" size="30"></div>
+										</td>
+										<td> 
+											<label><font color="#DC483A">结束时间:</font></label>
+											<div class="form-group"> <input type="text" class="form-control" name="endTime" size="30"> </div>
+										</td>
+									</tr>
+									<tr>	
+										<td colspan="2"> 
+											<label><font color="#DC483A">字段条件:</font></label>
+											<div class="form-group"> <input type="text" class="form-control" name="columnCondition" value="$!columnCondition" size="30"></div>
+										</td>
+									</tr>
+									<tr>
+										<td><label><font color="#08C">查询条数limit:</font></label>
+											<div class="form-group">
+												<select class="form-control" name="limit" id="limit">
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="50">50</option>
+													<option value="100">100</option>
+													<option value="1000">1000</option>
+												</select>
+											</div>
+										</td>
+										<td>
+											<div class="form-group">
+												<button type="submit" class="btn btn-info" name="jobButton" value="canalInstanceList">查询</button>
+											</div>
+										</td>
+									</tr></tbody>
+							</table>
+						</tr>
+						<!-- query condition end-->
+						
+						
+						
+						<!-- 查询结果 -->
+						#if($tablePositionBeans)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>canal地址</th>
+												<th>canal主机名</th>
+												<th>canal实例名</th>
+												<th>数据库地址</th>
+												<th>数据库名</th>
+												<th>表名</th>
+												<th>业务名</th>
+											</tr>
+										</thead>
+										<tbody>
+											#foreach($bean in $tablePositionBeans)
+												<tr>
+													<td>$!{bean.canalHost}:$!{bean.canalPort}</td>
+													<td>$!{bean.canalHostName}</td>
+													<td>$!{bean.destination}</td>
+													<td>$!{bean.dbAddress}</td>
+													<td>$!{bean.tableSchema}</td>
+													<td>$!{bean.tableName}</td>
+													<td>$!{bean.bizName}</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 

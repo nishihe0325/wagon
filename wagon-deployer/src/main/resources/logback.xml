@@ -1,0 +1,244 @@
+<configuration scan="true" scanPeriod=" 5 seconds">
+    <jmxConfigurator />
+    <property name="LOG_HOME" value="/data/logs/wagon/qa" />
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{56} - %msg%n" />
+    <property name="PATTERN_SIMPLE" value="%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WAGON-ROOT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>destination</Key>
+            <DefaultValue>wagon</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${destination}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/${destination}/${destination}.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/${destination}/%d{yyyy-MM-dd}/${destination}-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>512MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>60</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="WAGON-META" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>destination</Key>
+            <DefaultValue>wagon</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="META-FILE-${destination}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/${destination}/meta.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/${destination}/%d{yyyy-MM-dd}/meta-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>60</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="HEARTBEAT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>destination</Key>
+            <DefaultValue>heartbeat</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="HEARTBEAT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/heartbeat/heartbeat.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/heartbeat/%d{yyyy-MM-dd}/heartbeat-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>3</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>error</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/error/error.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/error/%d{yyyy-MM-dd}/error-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="DEBUG" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>debug</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/debug/debug.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/debug/%d{yyyy-MM-dd}/debug-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="NSQ" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>nsq</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="NSQ" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/nsq/nsq.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/nsq/%d{yyyy-MM-dd}/nsq-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="NSQ_FAIL" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>nsq_fail</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="NSQ_FAIL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/nsq_fail/nsq_fail.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/nsq_fail/%d{yyyy-MM-dd}/nsq_fail-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="STORE" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>store</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="STORE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/store/store.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/store/store-%d{yyyy-MM-dd-HH}-%i.log</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>512MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>1</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="com.alibaba.otter.canal.instance" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="WAGON-ROOT" />
+    </logger>
+
+    <logger name="com.alibaba.otter.canal.deployer" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="WAGON-ROOT" />
+    </logger>
+
+    <logger name="com.alibaba.otter.canal.meta.FileMixedMetaManager" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="WAGON-META" />
+    </logger>
+
+    <logger name="com.youzan.wagon" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="WAGON-ROOT" />
+    </logger>
+
+    <logger name="HEARTBEAT" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="HEARTBEAT" />
+    </logger>
+
+    <logger name="ERROR" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="ERROR" />
+    </logger>
+
+    <logger name="DEBUG" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <logger name="NSQ" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="NSQ" />
+    </logger>
+
+    <logger name="NSQ_FAIL" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="NSQ_FAIL" />
+    </logger>
+
+    <logger name="STORE" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="STORE" />
+    </logger>
+
+    <root level="INFO">
+        <!-- <appender-ref ref="STDOUT"/> -->
+        <appender-ref ref="WAGON-ROOT" />
+    </root>
+</configuration>

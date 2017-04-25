@@ -1,0 +1,57 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">编辑</div>
+            <form class="form-inline" method="post" action="/updateCanalInstance">
+                <input name="serviceName" type="text" hidden="true" value="$!curCanalInstance.serviceName">
+                <input name="instanceName" type="text" hidden="true" value="$!curCanalInstance.instanceName">
+                <table class="table">
+                    <tbody>
+                        <tr>
+							<td>
+								<label><font color="#08c"> &nbsp &nbsp  &nbsp  &nbsp &nbsp  &nbsp &nbsp &nbsp ip:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="dbHost" value="$!curCanalInstance.dbHost">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08c">&nbsp &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp  port:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="dbPort" value="$!curCanalInstance.dbPort">
+								</div>
+							</td>
+                        </tr>
+                        <tr>
+							<td>
+								<label><font color="#08c"> &nbsp binlogfile:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="binlogFile" value="$!curCanalInstance.binlogFile">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08c">binlogoffset:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="binlogOffset" value="$!curCanalInstance.binlogOffset">
+								</div>
+							</td>
+                        </tr>
+                        <tr>
+							<td>
+								<label><font color="#08c">binlogtime:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="binlogExeTime" value="$!curCanalInstance.binlogExeTime">
+								</div>
+							</td>
+                            <td></td>
+						</tr>
+                    </tbody>
+                </table>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-xs btn-warning" onclick="showcfm()">保存</button>
+                    <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">关闭</button>
+                    &nbsp &nbsp &nbsp
+                </div>
+            </form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,65 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			#if($instanceInfo)
+				<div class="panel-heading">$!instanceInfo.destination实例详细信息</div>
+				<form class="form-inline" role="queueForm" method="post" action="/job">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">id:</font></label>
+								    <font>$!instanceInfo.id</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">实例名:</font></label>
+								    <font>$!instanceInfo.destination</font>
+								</td>
+							</tr>
+							
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">mysql地址:</font></label>
+								    <font>$!instanceInfo.dbHost:$!instanceInfo.dbPort</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">slaveId:</font></label>
+									<font>$!instanceInfo.slaveId</font>
+								</td>
+							</tr>
+							
+							
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">主机地址:</font></label>
+								    <font>$!instanceInfo.canalHost:$!instanceInfo.canalPort</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">主机名称:</font></label>
+								    <font>$!instanceInfo.canalHostName</font>
+								</td>
+							</tr>
+							
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">创建时间:</font></label>
+								    $!dateTool.format('yyyy-MM-dd HH:mm:ss',$!instanceInfo.createTime)
+								</td>
+								<td width="30%">
+									<label><font color="#08C">更新时间:</font></label>
+									$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!instanceInfo.modifyTime)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			#else 
+				<div class="panel-heading">没有数据</div>
+			#end
+		</div>
+	</div>
+</div>

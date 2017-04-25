@@ -1,0 +1,89 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">新建规则</div>
+			<form class="form-inline" method="post" action="/addRule">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>
+								<label><font color="#08C">业 务 名:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="bizName">
+										#foreach($ruleBizInfo in $!ruleBizInfos)
+											<option value="$!ruleBizInfo.bizName" #if($!ruleBizInfo.bizName==$!ruleInfo.bizName) selected="selected" #end>$!ruleBizInfo.bizName</option>
+										#end
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">表 &nbsp &nbsp &nbsp &nbsp名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="tableName" value="$!ruleInfo.tableName">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">主 题 名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="topicName" value="$!ruleInfo.topicName" style="width:200%">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">事件类型:</font></label>
+								<div class="form-group">
+									<select name="eventType" class="form-control eventTypeClass" multiple class="chosen-select" data-placeholder="请选择事件类型" style="width:350px;"> 
+										<option value="-1"></option>
+										#foreach($eventType in $!selectedEventTypes)
+											<option value="$!eventType" selected="selected">$!eventType</option>
+										#end
+										#foreach($eventType in $!noSelectedEventTypes)
+											<option value="$!eventType">$!eventType</option>
+										#end
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">启用状态:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="enableState">
+										<option value="1" #if($!ruleInfo.enableState=="1") selected="selected" #end>启用</option>
+										<option value="2" #if($!ruleInfo.enableState=="2") selected="selected" #end>暂停</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">完整信息:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="pushDataType">
+										<option value="1" #if($!ruleInfo.pushDataType=="1") selected="selected" #end>是</option>
+										<option value="2" #if($!ruleInfo.pushDataType=="2") selected="selected" #end>否</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="form-group navbar-right">
+									<button type="submit" class="btn  btn-xs btn-warning" onClick="showcfm()">保存</button> &nbsp &nbsp &nbsp &nbsp
+								</div>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$('.eventTypeClass').chosen({
+	    no_results_text:"没有找到",
+	    allow_single_deselect:true
+	});    
+});
+</script>

@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">新建业务</div>
+			<form class="form-inline" method="post" action="/addRuleBiz">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>
+								<label><font color="#08C">业务名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="bizName" value="$!ruleBizInfo.bizName">
+								</div>
+							</td> 
+						</tr>
+						<tr>
+							<td >
+								<div class="form-group navbar-right">
+									<a href="ruleBizList"><button type='button' class='btn btn-info btn-xs'>取消</button></a>
+									<button type="submit" class="btn btn-warning btn-xs" onClick="showcfm()">提交</button> &nbsp &nbsp &nbsp &nbsp
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,96 @@
+<configuration scan="true" scanPeriod=" 5 seconds" debug="false">
+    <jmxConfigurator />
+    <property name="LOG_HOME" value="../logs" />
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{56} - %msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROOT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>binlog</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="binlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/binlog.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/binlog-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="DEBUG" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>debug</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/debug.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/debug-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="RESULT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>debug</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="result" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/result.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/result-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="com.youzan.wagon.binlog" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="ROOT" />
+    </logger>
+
+    <logger name="RESULT" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="RESULT" />
+    </logger>
+
+    <logger name="DEBUG" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="ROOT" />
+    </root>
+</configuration>

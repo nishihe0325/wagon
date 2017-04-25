@@ -1,0 +1,75 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">表查询</div>
+			<form class="form-inline" role="lockForm" method="post" action="/queryTablePositionDirectory">
+				<table class="table table-hover">
+					<tbody>
+					
+						<!-- 查询条件 -->
+						<tr>
+							<td>
+								<label><font color="#DC483A">表名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="tableName" id="tableName">
+								</div>
+							</td>
+							<td><label><font color="#08C">查询方式:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="queryType" id="queryType">
+										<option value="1" selected "selected">标准</option>
+										<option value="2">模糊</option>
+									</select>
+								</div>
+							</td>
+							<td><label><font color="#08C">显示库名:</font></label>
+								<div class="form-group">
+									<input type="checkbox" name="showSchemaName"/>
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
+									<button type="submit" class="btn btn-info">查询</button>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- 查询结果 -->
+						#if($tablePositionBeans)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>canal地址</th>
+												<th>canal主机名</th>
+												<th>canal实例名</th>
+												<th>数据库地址</th>
+												<th>数据库名</th>
+												<th>表名</th>
+												<th>业务名</th>
+											</tr>
+										</thead>
+										<tbody>
+											#foreach($bean in $tablePositionBeans)
+												<tr>
+													<td>$!{bean.canalHost}:$!{bean.canalPort}</td>
+													<td>$!{bean.canalHostName}</td>
+													<td>$!{bean.destination}</td>
+													<td>$!{bean.dbAddress}</td>
+													<td>$!{bean.tableSchema}</td>
+													<td>$!{bean.tableName}</td>
+													<td>$!{bean.bizName}</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 

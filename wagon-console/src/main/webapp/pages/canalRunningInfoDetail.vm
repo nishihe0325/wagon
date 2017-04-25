@@ -1,0 +1,110 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			#if($instanceData)
+				<div class="panel-heading">$!instanceData.destination</div>
+				<form class="form-inline" role="queueForm" method="post" action="/job">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td width="40%">
+									#set($canalAddrStr=$!instanceData.mysqlPosition.sourceAddress.toString())
+									<label><font color="#08C">mysql地址:</font></label>
+								    <font>$!canalAddrStr.substring(1,$!canalAddrStr.length())</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">slaveId:</font></label>
+									<font>$!instanceData.mysqlPosition.slaveId</font>
+								</td>
+							</tr>
+							
+							
+							
+							
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">binlog位点:</font></label>
+								    <font>$!instanceData.binlogPosition.journalName:$!instanceData.binlogPosition.position</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">binlog执行时间:</font></label>
+								    <font>$!instanceData.binlogPosition.timestamp</font>
+								</td>
+							</tr>
+							
+							
+							
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">dump位点:</font></label>
+								    <font>$!instanceData.dumpPosition.journalName:$!instanceData.dumpPosition.position</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">dump执行时间:</font></label>
+								    <font>$formater.dumpDateTime($!instanceData)</font>
+								</td>
+							</tr>
+							
+							
+							
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">消费位点:</font></label>
+								    <font>$formater.consumePosition($!instanceData)</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">消费执行时间:</font></label>
+								    <font>$formater.consumeDateTime($!instanceData)</font>
+								</td>
+							</tr>
+							
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">buffer总条数:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferSizeTotal)</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">buffer已使用条数:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferSizeUsed)</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">buffer剩余条数:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferSizeRemain)</font>
+								</td>
+							</tr>
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">buffer容量总大小:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferCapacityTotal)</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">buffer已使用容量:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferCapacityUsed)</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">buffer剩余容量:</font></label>
+								    <font>$formater.formatNumber($!instanceData.bufferCapacityRemain)</font>
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<label><font color="#08C">消费延时:</font></label>
+									#if($formater.isDelay($!instanceData, 1)) 
+										<font color="#DC483A">$formater.delayDes($!instanceData)</font>
+									#else $formater.delayDes($!instanceData) #end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			#else 
+				<div class="panel-heading">没有数据</div>
+			#end
+		</div>
+	</div>
+</div>

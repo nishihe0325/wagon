@@ -1,0 +1,225 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">#if($operatorType && $operatorType=="add")新建 #else 编辑 #end </div>
+			<form class="form-inline" method="post">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td width="40%">
+								<label><font color="#08C">业 务 名:</font></label>
+								$!ruleInfo.bizName
+							</td>
+							<td width="40%">
+								<label><font color="#08C">表 &nbsp &nbsp &nbsp &nbsp名:</font></label>
+								$!ruleInfo.tableName
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<label><font color="#08C">主 题 名:</font></label>
+								$!ruleInfo.topicName
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">事件类型:</font></label>
+								$!ruleInfo.event
+							</td>
+							<td>
+								<label><font color="#08C">完整信息:</font></label>
+								$!ruleInfo.pullAll
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">字段关系:</font></label>
+								$!ruleInfo.fieldRuleRela
+							</td>
+							<td>
+								<label><font color="#08C">字段输出:</font></label>
+								$!ruleInfo.outFieldType
+							</td>
+							<td>
+								<label><font color="#08C">是否启用:</font></label>
+								$!ruleInfo.active
+							</td>
+						</tr> 
+						<tr>
+							<td colspan="3">
+								<div class="form-group">
+									<label><font color="#08C">过滤字段:</font></label>
+									<table id="ruleFieldTableId" class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>字段位置</th>
+												<th>字段名称</th>
+												<th>操作</th>
+												<th>字段值</th>
+												<th>是否必须更新</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody id="ruleFieldTableBodyId">
+											##点击添加字段，动态添加
+										</tbody>
+									</table>
+									<button id="addRuleFieldButtonId" type="button" class="btn btn-danger btn-xs">添加规则字段</button>
+								</div>
+							</td>
+						</tr> 
+						<tr>
+							<td colspan="3">
+								<div class="form-group">
+									<label><font color="#08C">输出或忽略字段:</font></label>
+									<table id="outFieldDivId" class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>字段名称</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody id="ruleFieldTBodyId" >
+											##添加输出字段，动态添加
+										</tbody>
+									</table>
+									<button id="addOutFieldButtonId" type="button" class="btn btn-danger btn-xs">添加输出字段</button>
+								</div>
+							</td>
+						</tr>   
+						<tr>
+							<td colspan="2">
+								<div class="form-group"><button type="submit" class="btn btn-info btn-xs">编辑</button></div>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>
+$(document).ready(function() { 
+	##添加规则字段
+	$("#addRuleFieldButtonId").click(function(){
+		var tr="<tr>";
+		
+		##位置
+		tr=tr+"<td><div class='form-group'><select class='form-control' name='beforeOrAfter'>";
+		tr=tr+"<option value='after'>更新后</option>";
+		tr=tr+"<option value='before'>更新前</option>";
+		tr=tr+"</select></div></td>";
+		
+		##字段名
+		tr=tr+"<td><div class='form-group'><input type='text' class='form-control' name='columnName'></div></td>";
+		
+		##字段操作
+		tr=tr+"<td><div class='form-group'><select class='form-control' name='columnOperator'>";
+		tr=tr+"<option value='='>等于</option>";
+		tr=tr+"<option value='!='>不等于</option>";
+		tr=tr+"<option value='>'>大于</option>";
+		tr=tr+"<option value='>='>大于等于</option>";
+		tr=tr+"<option value='<'>小于</option>";
+		tr=tr+"<option value='<='>小于等于</option>";
+		tr=tr+"<option value='in'>in</option>";
+		tr=tr+"<option value='empty'>为空</option>";
+		tr=tr+"<option value='notEmpty'>非空</option>";
+		tr=tr+"<option value='updated'>有更新</option>";
+		tr=tr+"<option value='module'>取模</option>";
+		tr=tr+"</select></div></td>";
+		
+		##字段值
+		tr=tr+"<td><div class='form-group'><input type='text' class='form-control' name='columnValue'></div></td>";
+		
+		##是否必须更新
+		tr=tr+"<td><div class='form-group'><select class='form-control' name='mustUpdated'>";
+		tr=tr+"<option value='false'>否</option>";
+		tr=tr+"<option value='true'>是</option>";
+		tr=tr+"</select></div></td>";
+		
+		##添加，删除按钮
+	   	tr=tr+"<td>";
+		tr=tr+"<button type='button' class='btn btn-info btn-xs addRuleFieldClass'>添加</button>";
+		tr=tr+"&nbsp<button type='button' class='btn btn-danger btn-xs removeRuleFieldClass'>删除</button>";
+		tr=tr+"</td>";
+		
+		##在tbody中添加tr
+		tr=tr+"</tr>";
+	    $("#ruleFieldTableBodyId").append(tr);
+	}); 
+	
+	##添加规则字段
+	$('#ruleFieldTableId').click(function(e){
+		var target = $(e.target);
+		if(target.hasClass('addRuleFieldClass')){
+			var bizName=$("#bizNameSelectId").val();
+			$.ajax({ 
+				url:'/addRuleFiled', 
+				type:'post',  
+				dataType:'html', 
+				data:'bizName='+bizName, 
+				error: function(msg){
+					alert("获取业务的表名列表失败，请手动输入："+msg);
+				}, 
+				success: function(msg){ 
+					##成功获取到该业务对应的所有表名，则动态添加表选择框选项
+					if(msg != null){
+						var select=$("#tableNameSelectId");
+						select.empty();  ##先清空，避免多次重复添加
+						var array=msg.split(",");
+						for(i=0;i<array.length;i++ ){ 
+							var tableName=array[i];
+							select.append("<option value="+tableName+">"+tableName+"</option>");
+						} 
+					} 
+				} 
+			}); 
+		}
+	}); 
+	
+	##删除规则字段
+	$('#ruleFieldTableId').click(function(e){
+		var target = $(e.target);
+		if(target.hasClass('removeRuleFieldClass')){
+			var cur=target.parent().parent();
+			cur.remove();
+		}
+	}); 
+	
+	##添加输出字段
+	$("#addOutFieldButtonId").click(function(){  
+		var tr="<tr>";
+		
+		##字段名称
+		tr=tr+"<td width='40%'><div class='form-group'>";
+		tr=tr+"<input type='text' class='form-control' name='outColumn'>";
+		tr=tr+"</div></td>";
+		
+		##删除按钮
+	   	tr=tr+"<td>";
+		tr=tr+"<button type='button' class='btn btn-danger btn-xs removeOutFieldClass'>删除</button>";
+		tr=tr+"</td>";
+		
+		##在tbody中添加tr
+		tr=tr+"</tr>";
+	    $("#ruleFieldTBodyId").append(tr);
+	});  
+	
+	##删除输出字段
+	$('#outFieldDivId').click(function(e){
+		var target = $(e.target);
+		if(target.hasClass('removeOutFieldClass')){
+			var cur=target.parent().parent();
+			cur.remove();
+		}
+	});  
+});
+</script> 
+ 

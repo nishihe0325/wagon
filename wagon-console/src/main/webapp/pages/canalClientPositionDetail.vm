@@ -1,0 +1,67 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			#if($positionInfo)
+				<div class="panel-heading">$!positionInfo.destination实例详细信息</div>
+				<form class="form-inline" role="queueForm" method="post" action="/job">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td width="40%">
+									<label><font color="#08C">id:</font></label>
+								    <font>$!positionInfo.id</font>
+								</td>
+								<td width="40%">
+									<label><font color="#08C">实例名:</font></label>
+								    <font>$!positionInfo.destination</font>
+								</td>
+							</tr> 
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">主机地址:</font></label>
+								    <font>$!positionInfo.canalHost:$!positionInfo.canalPort</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">主机名称:</font></label>
+								    <font>$!positionInfo.canalHostName</font>
+								</td>
+							</tr>
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">clientId:</font></label>
+								    <font>$!positionInfo.clientId</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">位点</font></label>
+								    <font>$!positionInfo.journalName:$!positionInfo.position</font>
+								</td>
+								<td width="30%">
+									<label><font color="#08C">位点执行时间</font></label>
+								    <font>$!positionInfo.timestamp</font>
+								</td>
+							</tr>
+							
+							
+							
+							<tr>
+								<td width="30%">
+									<label><font color="#08C">创建时间:</font></label>
+								    $!dateTool.format('yyyy-MM-dd HH:mm:ss',$!positionInfo.createTime)
+								</td>
+								<td width="30%">
+									<label><font color="#08C">更新时间:</font></label>
+									$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!positionInfo.modifyTime)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			#else 
+				<div class="panel-heading">没有数据</div>
+			#end
+		</div>
+	</div>
+</div>

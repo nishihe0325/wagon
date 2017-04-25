@@ -1,0 +1,127 @@
+	<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				规则列表
+				<a class="navbar-right" href="newRule">
+					<button type="button" class="btn btn-xs btn-warning">新建</button>&nbsp &nbsp &nbsp &nbsp
+				</a>
+				<a class="navbar-right" href="ruleBizList">
+					<button type="button" class="btn btn-xs btn-warning">业务管理</button>&nbsp &nbsp &nbsp &nbsp
+				</a>
+			</div>
+			<form class="form-inline" role="jobForm" method="post" action="/ruleList">
+				<table class="table table-hover">
+					<tbody>
+						<!-- query condition start-->
+						<tr>
+							<td>
+								<label><font color="#08C">&nbsp &nbsp 业务名:</font></label>
+								<div class="form-group">
+									<select class="form-control singleChosenClass" name="bizName">
+										<option value="">全部</option>
+										#foreach($ruleBizInfo in $!ruleBizInfos)
+											<option value="$!ruleBizInfo.bizName" #if($!ruleBizInfo.bizName==$!ruleInfo.bizName) selected="selected" #end>$!ruleBizInfo.bizName</option>
+										#end
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">表名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="tableName" value="$!ruleInfo.tableName">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">主题名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="topicName" value="$!ruleInfo.topicName">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">每页显示:</font></label>
+								<div class="form-group">
+									<select class="form-control singleChosenClass" name="pageSize">
+										<option value="10" #if($!ruleInfo.pageSize=="10") selected="selected" #end>10</option>
+										<option value="20" #if($!ruleInfo.pageSize=="20") selected="selected" #end>20</option>
+										<option value="50" #if($!ruleInfo.pageSize=="50") selected="selected" #end>50</option>
+										<option value="100" #if($!ruleInfo.pageSize=="100") selected="selected" #end>100</option>
+										<option value="1000" #if($!ruleInfo.pageSize=="1000") selected="selected" #end>1000</option>
+									</select>
+								</div>
+							</td> 
+							<td>
+								<div class="form-group">
+									<button type="submit" class="btn btn-info btn-xs">查询</button>
+								</div>
+							</td>
+						</tr>
+						<!-- query condition end-->
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						<!-- query result start-->
+						#if($ruleInfos)
+							<tr>
+								<td colspan="5">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>业务名</th>
+												<th>表名</th>
+												<th>主题名</th>
+												<th>事件类型</th>
+												<th>完整信息</th>
+												<th>状态</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+							     			#foreach($ruleInfo in $ruleInfos)
+												<tr>
+													<td><a href="ruleList?bizName=$!ruleInfo.bizName">$!ruleInfo.bizName</a></td>
+													<td><a href="ruleList?tableName=$!ruleInfo.tableName">$!ruleInfo.tableName</a></td>
+													<td><a href="ruleDetail?id=$!ruleInfo.id">$!ruleInfo.topicName</a></td>
+													<td>$!ruleInfo.eventType</td>
+													<td style="width:7%">#if($!ruleInfo.pushDataType==1) 是 #else <font color="#DC483A">否</font> #end</td>
+													<td style="width:6%">#if($!ruleInfo.enableState==1) 启用 #else <font color="#DC483A">暂停</font> #end</td>
+													<td style="width:12%">
+														<div class="form-group">
+															<a href="editRule?id=$!ruleInfo.id"><button type="button" class="btn btn-info btn-xs">编辑</button></a>
+															#if($!ruleInfo.enableState==1) 
+																<a href="disableRule?id=$!ruleInfo.id"><button type="button" class="btn btn-warning btn-xs" onClick="showcfm()">暂停</button></a>
+															#else 
+																<a href="enableRule?id=$!ruleInfo.id"><button type="button" class="btn btn-success btn-xs" onClick="showcfm()">启用</button></a>
+															#end
+															<a href="removeRule?id=$!ruleInfo.id"><button type="button" class="btn btn-danger btn-xs" onClick="showcfm()">删除</button></a>
+														</div>
+													</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+						<!-- query result end-->
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('.singleChosenClass').chosen({
+			no_results_text:"没有找到",
+			allow_single_deselect:true
+		});
+	});
+</script>

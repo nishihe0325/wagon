@@ -1,0 +1,307 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">新增规则</div>
+			<form class="form-inline" role="queueForm" method="post" action="/job">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td width="40%">
+								<label><font color="#08C">业务名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="bizName" id="bizName" value="$!jobInfo.businessName">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">表名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="tableName" id="tableName" value="$!jobInfo.name">
+								</div> 
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<label><font color="#08C">topic:</font></label>
+								<textarea class="form-control" rows="1" name="topicName" id="topicName" style="width:50%">$!jobInfo.executorIps</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">事件类型:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="runningModel" id="runningModel">
+										<option value="1" #if($!jobInfo.runningModel==1) selected="selected" #end>进程模式</option>
+										<option value="2" #if($!jobInfo.runningModel==2) selected="selected" #end>线程模式</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">是否变更前后数据都推送:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="runningModel" id="runningModel">
+										<option value="1" #if($!jobInfo.runningModel==1) selected="selected" #end>进程模式</option>
+										<option value="2" #if($!jobInfo.runningModel==2) selected="selected" #end>线程模式</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">规则字段关系:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="runningModel" id="runningModel">
+										<option value="1" #if($!jobInfo.runningModel==1) selected="selected" #end>进程模式</option>
+										<option value="2" #if($!jobInfo.runningModel==2) selected="selected" #end>线程模式</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">输出或忽略字段:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="runningModel" id="runningModel">
+										<option value="1" #if($!jobInfo.runningModel==1) selected="selected" #end>进程模式</option>
+										<option value="2" #if($!jobInfo.runningModel==2) selected="selected" #end>线程模式</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+						
+						
+						
+						
+						
+						
+						<tr>
+							<td colspan="2">
+								<label><font color="#08C">规则字段:</font></label>
+			
+								##添加过滤字段按钮
+								<div class="form-group">
+									<label class="col-sm-4 control-label">
+										<button id="addRuleFieldButtonId" type="button" class="btn btn-info btn-xs">添加</button>
+									</label> 
+								</div>
+								
+								
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr class="active">
+											<th>位置</th>
+											<th>字段名</th>
+											<th>操作</th>
+											<th>值</th>
+											<th>必须更新</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>#if($!elem.state==1)执行中#elseif($!elem.state==2)调用完#elseif($!elem.state==3)已反馈#else默认值#end</td>
+											<td>#if($!elem.needResult==1)需要#else无需#end</td>
+											<td>#if($!elem.needResult==1)需要#else无需#end</td>
+											<td>
+												<a href="jobRecordDetail?id=$!elem.id">
+													<font #if($!elem.resultCode==1 || $!elem.resultCode==3 || $!elem.resultCode==5) color="#08C" #else color="#DC483A" #end>
+														#if($!elem.resultCode==1)调用执行器成功
+														#elseif($!elem.resultCode==2)调用执行器失败
+														#else未知值
+														#end
+													</font>
+												</a>
+											</td>
+													
+											<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!elem.modifyDate)</td>
+										</tr>
+										<!--
+										<tr>
+											<td colspan="12">
+												任务id[<font color="#DC483A">$!elem.id</font>]结果反馈信息: <font color="#DC483A">$!elem.message</font>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						
+						 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>
+$(document).ready(function() { 
+	var ruleFieldIndex=$curFieldRuleCount;
+	var outFieldIndex=$curOutFieldCount;
+	
+	##添加规则字段
+	$("#addRuleFieldButtonId").click(function(){
+		var eventType=$("#eventTypeSelectId").val();
+		ruleFieldIndex=ruleFieldIndex+1; 
+		var sIndex=ruleFieldIndex+"";
+		
+		var tr="<tr class='success'>";
+		
+		##更新位置
+		if(eventType=="update"){
+			tr=tr+"<td>";
+			tr=tr+"<select class='form-control' name='position_" + sIndex + "'>";
+			tr=tr+"<option value='after'>更新后</option>";
+			tr=tr+"<option value='before'>更新前</option>";
+			tr=tr+"</select>";
+			tr=tr+"</td>";
+	   	}
+	   	
+	   	##字段名称
+		tr=tr+"<td>";
+		tr=tr+"<input class='form-control' name='fieldName_" + sIndex + "' type='text' placeholder='该输入字段名称...'>";
+		tr=tr+"</td>";
+		
+		##操作类型
+		tr=tr+"<td>";
+		tr=tr+"<select class='form-control' name='operator_" + sIndex + "'>";
+		tr=tr+"<option value ='='>等于</option>";
+		tr=tr+"<option value ='!='>不等于</option>";
+		tr=tr+"<option value ='>'>大于</option>";
+		tr=tr+"<option value ='>='>大于等于</option>";
+		tr=tr+"<option value ='<'>小于</option>";
+		tr=tr+"<option value ='<='>小于等于</option>";
+		tr=tr+"<option value ='in'>in</option>";
+		tr=tr+"<option value ='empty'>为空</option>";
+		tr=tr+"<option value ='notEmpty'>非空</option>";
+		tr=tr+"<option value ='updated'>有更新</option>";
+		tr=tr+"<option value ='module'>取模</option>";
+		tr=tr+"</select>";
+		tr=tr+"</td>";
+		
+		##字段值
+		tr=tr+"<td>";
+		tr=tr+"<input class='form-control' name='fieldValue_" + sIndex + "' type='text' placeholder='该输入字段值...'>";
+		tr=tr+"</td>";
+		
+		##是否必须更新
+		if(eventType=="update"){
+	   		tr=tr+"<td>";
+			tr=tr+"<select class='form-control' name='mustUpdated_" + sIndex + "'>";
+			tr=tr+"<option value='true'>必须</option>";
+			tr=tr+"<option value ='false'>不必须</option>";
+			tr=tr+"</select>";
+			tr=tr+"</td>";
+	   	}
+	   	
+	   	##删除规则字段按钮
+	   	tr=tr+"<td>";
+		tr=tr+"<button type='button' class='btn btn-primary removeRuleFieldClass'>删除</button>";
+		tr=tr+"</td>";
+	    
+	    tr=tr+"</tr>";
+	    
+	    ##在table中添加thead和tbody(如果还没有)
+	    if(ruleFieldIndex==1){ ##只有第一次才增加
+	    	##添加表头
+			var thead="<thead id='ruleFieldTableHeadId'><tr class='success'>";
+			if(eventType=="update"){thead=thead+"<th>位置</th>";}
+			thead=thead+"<th>字段名</th>";
+			thead=thead+"<th>操作类型</th>";
+			thead=thead+"<th>值</th>";
+			if(eventType=="update"){thead=thead+"<th>必须更新</th>";}
+			thead=thead+"</tr></thead>"; 
+			$("#ruleFieldTableId").append(thead);
+			
+	    	##添加表头，表体
+			$("#ruleFieldTableId").append("<tbody id='ruleFieldTableBodyId'><tr class='success'></tr></tbody>");
+	    }
+	    
+	    ##在tbody中添加tr
+	    $("#ruleFieldTableBodyId").append(tr);
+	});  
+
+	##添加输出字段
+	$("#addOutFieldButtonId").click(function(){ 
+		outFieldIndex=outFieldIndex+1; 
+		var sOutFieldIndex=outFieldIndex+"";
+		
+		var html="<div class='form-group'>";
+		
+		##"输出字段"输入框
+		html=html+"<div class='col-sm-8'>";
+		html=html+"<input class='form-control' name='outFieldName_" + sOutFieldIndex + "'type='text' placeholder='该输入需要输出的字段名称...'>";
+		html=html+"</div>";
+		
+		##"输出字段"删除按钮
+		html=html+"<div class='col-sm-2'>";
+		html=html+"<button type='button' class='btn btn-primary removeOutFieldClass'>删除</button>";
+		html=html+"</div>";
+		
+		html=html+"</div>";
+		
+		$("#outFieldDivId").append(html);
+	}); 
+	
+	######################################################################################################
+	##删除规则字段
+	$('#ruleFieldTableId').click(function(e){
+		var target = $(e.target);
+		if(target.hasClass('removeRuleFieldClass')){
+			var cur=target.parent().parent();
+			cur.remove();
+		}
+	});  
+	
+	##删除输出字段
+	$('#outFieldDivId').click(function(e){
+		var target = $(e.target);
+		if(target.hasClass('removeOutFieldClass')){
+			var cur=target.parent().parent();
+			cur.remove();
+		}
+	});  
+	
+	##"业务名称"选择框失去焦点后的动作，联动表名的选择框
+	$("#bizNameSelectId").blur(function(){ 
+		var bizName=$("#bizNameSelectId").val();
+		$.ajax({ 
+			url:'/getTableNamesByBizName', 
+			type:'get',  
+			dataType:'html', 
+			data:'bizName='+bizName,  
+			error: function(msg){
+				alert("获取业务的表名列表失败，请手动输入："+msg);
+			}, 
+			success: function(msg){ 
+				##成功获取到该业务对应的所有表名，则动态添加表选择框选项
+				if(msg != null){
+					var select=$("#tableNameSelectId");
+					select.empty();  ##先清空，避免多次重复添加
+					var array=msg.split(",");
+					for(i=0;i<array.length;i++ ){ 
+						var tableName=array[i];
+						select.append("<option value="+tableName+">"+tableName+"</option>");
+					} 
+				} 
+			} 
+		}); 
+	});   
+	
+	##表名输入方式切换按钮动作
+	$("#tableNameTypeButtonId").click(function(){
+		var button=$(this);
+		var text=button.text().trim();
+		if(text=='切换为手动输入'){
+			button.text("切换为选择输入");
+			$("#tableNameSelectDivId").attr("hidden","true");
+			$("#tableNameInputDivId").removeAttr("hidden");
+			$("#tableNameInputTypeId").attr("value", "input");
+		} else { 
+			button.text("切换为手动输入");
+			$("#tableNameSelectDivId").removeAttr("hidden");
+			$("#tableNameInputDivId").attr("hidden","true");
+			$("#tableNameInputTypeId").attr("value", "select");
+		}
+    });     
+});
+</script> 

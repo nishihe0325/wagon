@@ -1,0 +1,250 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span8">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <!-- 左侧导航 -->
+                    <td width="20%">
+                        <div class="span4">
+                            <ul class="nav nav-pills nav-stacked well">
+                                #if($!allCanalServices)
+                                    #foreach($canalService in $allCanalServices)
+                                        <li #if($!canalService.serviceName==$!curCanalService.serviceName) class="active" #end>
+                                            <a href="instanceManage?serviceName=$!canalService.serviceName">$!canalService.serviceName</a>
+                                        </li>
+                                    #end
+                                #end
+                                <li>
+                                    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#newServiceModal">新建服务</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <!-- 右侧内容 -->
+                    <td width="80%">
+                        <!-- 服务信息 -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                规则名称: <a href="/ruleList?bizName=$!curCanalService.ruleBizName">$!curCanalService.ruleBizName</a>
+                                <div class="navbar-right">版本时间: $!dateTool.format('MM-dd HH:mm',$!curCanalService.modifyTime)&nbsp &nbsp &nbsp</div>
+                            </div>
+                        </div>
+
+                        <!-- 数据库和binlog信息 -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                实例信息
+                                <div class="navbar-right dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <span class="caret"></span> </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                        <li><a href="newCanalInstance?serviceName=$!curCanalService.serviceName">新建</a></li>
+                                        <li><a href="cleanBinlogPosition?serviceName=$!curCanalService.serviceName">清空位点</a></li>
+                                        <li><a href="updatCanalInstanceVersion?serviceName=$!curCanalService.serviceName">更新版本</a></li>
+                                    </ul>
+                                    &nbsp &nbsp &nbsp
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>实例名</th>
+                                    <th>数据库主机名</th>
+                                    <th>数据库IP</th>
+                                    <th>port</th>
+                                    <th>binlog文件</th>
+                                    <th>binlog位点</th>
+                                    <th>binlog时间</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #if($!curAllCanalInstances)
+                                        #foreach($canalInstance in $curAllCanalInstances)
+                                        <tr>
+                                            <td>$!canalInstance.instanceName</td>
+                                            <td>$!canalInstance.dbHostName</td>
+                                            <td>$!canalInstance.dbHost</td>
+                                            <td>$!canalInstance.dbPort</td>
+                                            <td>$!canalInstance.binlogFile</td>
+                                            <td>$!canalInstance.binlogOffset</td>
+                                            <td>$!dateTool.format('MM-dd HH:mm',$!canalInstance.binlogExeTime)</td>
+                                            <td style="width:7%">
+                                                #if($!canalInstance.status==2) <font color="#DC483A">暂停</font>
+                                                #elseif($!canalInstance.status==3) <font color="#DC483A">挂起</font>
+                                                #else 运行中
+                                                #end
+                                            </td>
+                                            <td style="width:8%">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <span class="caret"></span> </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                        <li><a href="editCanalInstance?id=$!canalInstance.id">编辑</a></li>
+                                                        <li><a href="#">暂停</a></li>
+                                                        <li><a href="#">挂起</a></li>
+                                                        <li><a href="#" data-toggle="modal" data-target="#switchCanalInstanceModal">切库</a></li>
+                                                        <li><a href="/removeCanalInstance?id=$!canalInstance.id&serviceName=$!curCanalService.serviceName">删除</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        #end
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 服务器信息 -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">服务器信息</div>
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>主机名</th>
+                                    <th>主机IP</th>
+                                    <th>主机Port</th>
+                                    <th>更新时间</th>
+                                    <th>根路径</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #if($!curAllCanalServers)
+                                        #foreach($canalServer in $curAllCanalServers)
+                                        <tr>
+                                            <td>$!canalServer.hostName</td>
+                                            <td>$!canalServer.host</td>
+                                            <td>$!canalServer.port</td>
+                                            <td>$!dateTool.format('MM-dd HH:mm',$!canalServer.modifyTime)</td>
+                                            <td></td>
+                                        </tr>
+                                        #end
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（新建canal服务） -->
+<div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增服务</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" method="post" action="/newService">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label><font color="#08C">服务名:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="serviceName">
+                                </div>
+                            </td>
+                            <td>
+                                <label><font color="#08C">规则业务名:</font></label>
+                                <div class="form-group">
+                                    <select class="form-control " name="ruleBizName">
+                                        #foreach($ruleBizName in $!allRuleBizNames)
+                                            <option value="$!ruleBizName">$!ruleBizName</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-xs btn-warning" onClick="showcfm()">保存</button>
+                        &nbsp &nbsp &nbsp &nbsp
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（切换canal实例） -->
+<div class="modal fade" id="switchCanalInstanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">目标MySQL实例</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" method="post" action="/switchCanalInstance">
+                    <input name="serviceId" type="text" hidden="true" value="$!curCanalService.serviceId">
+                    <input name="serviceName" type="text" hidden="true" value="$!curCanalService.serviceName">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label><font color="#08C"> &nbsp &nbspDB主机IP:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="dbHost">
+                                </div>
+                            </td>
+                            <td>
+                                <label><font color="#08C">&nbspDB主机Port:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="dbPort">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label><font color="#08C"> &nbsp binlogFile:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="binlogFile">
+                                </div>
+                            </td>
+                            <td>
+                                <label><font color="#08C">binlogOffset:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="binlogOffset">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label><font color="#08C">binlogTime:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="binlogExeTime">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-xs btn-warning" onClick="showcfm()">保存</button>
+                        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">关闭</button>
+                        &nbsp &nbsp &nbsp
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.singleChosenClass').chosen({
+            no_results_text: "没有找到",
+            allow_single_deselect: true
+        });
+    });
+</script>

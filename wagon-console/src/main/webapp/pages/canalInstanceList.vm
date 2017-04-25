@@ -1,0 +1,112 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading"> 实例信息 </div>
+			<form class="form-inline" role="jobForm" method="post" action="/canalInstanceList">
+				<table class="table table-hover">
+					<tbody>
+						<!-- 查询条件 -->
+						<tr>
+							<td> 
+								<label><font color="#08C">主机ip:</font></label>
+								<div class="form-group"> 
+									<input type="text" class="form-control" name="canalHost" value="$!canalHost">
+								</div>
+							</td>
+							<td> 
+								<label><font color="#08C">主机port:</font></label>
+								<div class="form-group"> 
+									<input type="text" class="form-control" name="canalPort" value="$!canalPort">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td> 
+								<label><font color="#08C">数据库主机ip:</font></label>
+								<div class="form-group"> 
+									<input type="text" class="form-control" name="dbHost" value="$!dbHost">
+								</div>
+							</td>
+							<td> 
+								<label><font color="#08C">数据库port:</font></label>
+								<div class="form-group"> 
+									<input type="text" class="form-control" name="dbPort" value="$!dbPort">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C"> 每页显示:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="pageSize">
+										<option value="10" #if($!pageSize=="10") selected="selected" #end>10</option>
+										<option value="20" #if($!pageSize=="20") selected="selected" #end>20</option>
+										<option value="50" #if($!pageSize=="50") selected="selected" #end>50</option>
+										<option value="100" #if($!pageSize=="100") selected="selected" #end>100</option>
+										<option value="1000" #if($!pageSize=="1000") selected="selected" #end>1000</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
+									<button type="submit" class="btn btn-info">查询</button>
+								</div>
+							</td>
+						</tr>
+					
+						<!-- 查询结果 -->
+						#if($serverInstanceMap)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>主机名</th>
+												<th>端口</th>
+												<th>实例名</th>
+												<th>数据库地址</th>
+												<th>更新时间</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											#foreach($entry in $serverInstanceMap.entrySet())
+												#set($serverInfo=$entry.key)
+												#set($instanceList=$entry.value)
+												<tr>
+										     		<td colspan="10">
+										     			<font color="#08C">$!serverInfo.canalHostName &nbsp $!serverInfo.canalPort</font>
+									     			</td>
+								     			</tr>
+								     			
+												#foreach($instance in $instanceList)
+													<tr>
+														<td class="tdCanalHostNameClass">$!{instance.canalHostName}</td>
+														<td class="tdCanalPortClass">$!{instance.canalPort}</td>
+														<td class="tdInstanceDestination">$!instance.destination</td>
+														<td>${instance.dbHost}:${instance.dbPort}</td>
+														<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!instance.modifyTime)</td>
+														<td>
+															<a href="canalInstanceDetail?id=$!{instance.id}">
+																<button type="button" class="btn btn-info btn-xs" name="queryButton" value="jobrecord">详情</button>
+															</a>
+															<a href="removeInstance?id=$!{instance.id}">
+																<button type="button" class="btn btn-danger btn-xs" onClick="showcfm()">删除</button>
+															</a> 
+														</td>
+													</tr>
+												#end
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 
+
+

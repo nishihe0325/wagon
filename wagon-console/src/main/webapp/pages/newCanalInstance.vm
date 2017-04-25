@@ -1,0 +1,101 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">新建实例</div>
+            <form class="form-inline" method="post" action="/addCanalInstance">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label><font color="#08C">&nbsp &nbsp &nbsp &nbsp&nbsp&nbsp服务名:</font></label>
+                            <div class="form-group">
+                                <select class="form-control singleChosenClass" name="serviceName">
+                                    #if($!allCanalServices)
+                                        #foreach($canalService in $allCanalServices)
+                                            <option value="$!canalService.serviceName" #if($!canalService.serviceName==$!curCanalService.serviceName) selected="selected" #end>$!canalService.serviceName</option>
+                                        #end
+                                    #end
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <label><font color="#08C">&nbsp &nbsp &nbsp &nbsp&nbsp&nbsp&nbsp实例名:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="instanceName">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label><font color="#08C"> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp IP:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbHost">
+                            </div>
+                        </td>
+                        <td>
+                            <label><font color="#08C">&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp port:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbPort">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label><font color="#08C"> &nbsp username:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbUsername">
+                            </div>
+                        </td>
+                        <td>
+                            <label><font color="#08C">&nbsp &nbsp password:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbPassword">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label><font color="#08C"> &nbsp binlogFile:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="binlogFile">
+                            </div>
+                        </td>
+                        <td>
+                            <label><font color="#08C">binlogOffset:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="binlogOffset">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label><font color="#08C">binlogTime:</font></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="binlogExeTime">
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-xs btn-warning" onClick="showcfm()">保存</button>
+                    <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">关闭</button>
+                    &nbsp &nbsp &nbsp
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('.singleChosenClass').chosen({
+                no_results_text: "没有找到",
+                allow_single_deselect: true
+            });
+        });
+    });
+</script>

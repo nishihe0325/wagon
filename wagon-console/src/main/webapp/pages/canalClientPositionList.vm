@@ -1,0 +1,150 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				消费位点信息
+	        	<a class="navbar-right" data-toggle="collapse" data-parent="#accordion" href="#queryConditionId">高级查询</a>
+			</div>
+			<form class="form-inline" role="jobForm" method="post" action="/canalClientPosition">
+				<table class="table table-hover">
+					<tbody>
+					
+					
+					
+					
+					
+					
+					
+						<!-- query condition start-->
+						<tr>
+							<td colspan="2">
+								<div class="panel-group" id="accordion">
+							    	<div id="queryConditionId" class="panel-collapse collapse">
+							      		<div class="panel-body">
+							        		<table class="table table-bordered table-hover">
+												<tbody>
+													<tr>
+														<td> <label><font color="#DC483A">canal主机:</font></label>
+															<div class="form-group"> <input type="text" class="form-control" name="canalAddress" value="$!businessName" id="canalAddress" size="30" placeholder="不填则显示所有，格式：host:port"></div>
+														</td>
+														<td> <label><font color="#DC483A">canal端口:</font></label>
+															<div class="form-group"> <input type="text" class="form-control" name="canalAddress" value="$!businessName" id="canalAddress" size="30" placeholder="不填则显示所有，格式：host:port"></div>
+														</td>
+													</tr>
+													<tr>
+														<td> <label><font color="#DC483A">数据库主机:</font></label>
+															<div class="form-group"> <input type="text" class="form-control" name="canalDestination" id="canalAddress" value="$!canalAddress" placeholder="不填则所有实例"></div>
+														</td>
+														<td> <label><font color="#DC483A">数据库端口:</font></label>
+															<div class="form-group"> <input type="text" class="form-control" name="canalDestination" id="canalAddress" value="$!canalAddress" placeholder="不填则所有实例"></div>
+														</td>
+													</tr>
+													<tr>
+														<td><label><font color="#08C">查询条数limit:</font></label>
+															<div class="form-group">
+																<select class="form-control" name="limit" id="limit">
+																	<option value="10">10</option>
+																	<option value="20">20</option>
+																	<option value="50">50</option>
+																	<option value="100">100</option>
+																	<option value="1000">1000</option>
+																</select>
+															</div>
+														</td>
+														<td>
+															<div class="form-group">
+																<button type="submit" class="btn btn-info" name="jobButton" value="canalClientPosition">查询</button>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+							      		</div>
+							    	</div>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- query result start-->
+						#if($clientPositionMap)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>主机名</th>
+												<th>端口</th>
+												<th>实例名</th>
+												<th>执行时间</th>
+												<th>更新时间</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											#foreach($entry in $clientPositionMap.entrySet())
+												#set($serverInfo=$entry.key)
+												#set($positionList=$entry.value)
+												<tr>
+										     		<td colspan="10">
+										     			<font color="#08C">$!serverInfo.canalHostName &nbsp $!serverInfo.canalPort</font>
+									     			</td>
+								     			</tr>
+									     			
+												#foreach($position in $positionList)
+									    	        #set($journalName=${position.journalName})
+									    	        #set($journalName=$journalName.substring($journalName.indexOf('.'),$journalName.length()))
+									    	        #set($journalName=$journalName.substring(1,$journalName.length()))
+													<tr>
+														<td  class="tdPositionId" style="display:none;">${position.id}</td>
+														<td>${position.canalHostName}</td>
+														<td>${position.canalPort}</td>
+														<td>$position.destination</td>
+														<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!position.timestamp)</td>
+														<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!position.modifyTime)</td>
+														<td>
+															<a href="canalClientPositionDetail?id=$!{position.id}">
+																<button type="button" class="btn btn-info btn-xs">详情</button>
+															</a>
+															<button type="button" class="btn btn-danger btn-xs btn_removePosition">删除</button> 
+														</td>
+													</tr>
+												#end
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+						<!-- query result end-->
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+$(document).ready(function(){  
+	##删除规则
+    $(".btn_removePosition").click(function(){
+    	if(confirm("确定删除位点?")){
+			var id=$(this).parent().parent().children("td.tdPositionId").html(); 
+		
+			$.ajax({ 
+				url:'/removePosition', 
+				type:'post',  
+				dataType:'html', 
+				data:'id='+id,  
+				error: function(msg){ 
+					alert("删除失败："+msg);
+				},
+				success: function(msg){
+					reload();
+				} 
+			}); 
+		}
+    });  
+});
+</script>

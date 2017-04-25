@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alibaba.otter</groupId>
+		<artifactId>canal</artifactId>
+		<version>${canal_version}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<groupId>com.alibaba.otter</groupId>
+	<artifactId>canal.deployer</artifactId>
+	<packaging>jar</packaging>
+	<name>canal deployer module for otter ${project.version}</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.alibaba.otter</groupId>
+			<artifactId>canal.server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<!-- deploy模块的packaging通常是jar，如果项目中没有java 源代码或资源文件，加上这一段配置使项目能通过构建 -->
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>true</addMavenDescriptor>
+					</archive>
+					<excludes>
+						<exclude>**/logback.xml</exclude>
+						<exclude>**/canal.properties</exclude>
+						<exclude>**/spring/**</exclude>
+						<exclude>**/example/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

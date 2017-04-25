@@ -1,0 +1,132 @@
+<div class="container-fluid" id="XS">
+<div class="row-fluid">
+<div class="span12">
+<br/>状态：#if($isRunning==true)运行中 #else 已停止 #end<br/> 
+<h3 class="text-center text-success">$bizName#if($tableRuleList.size()==0)没有数据#else的规则列表#end</h3>  
+<button type="button" id="$bizName" class="btn btn-primary btn_addRuleClass">添加规则</button><br/><br/> 
+#if($tableRuleList.size()>0)
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th align="center">表名</th>
+			<th align="center">主题名</th>
+			<th align="center">事件类型</th>
+			<th align="center">字段规则</th> 
+			<th align="center">输出或忽略字段(红色为忽略)</th> 
+			<th align="center">操作</th>
+			<th align="center">表操作</th>
+		</tr>
+	</thead>
+	<tbody>  
+		#foreach($tableRule in $tableRuleList)
+			#set($topicCount=$tableRule.size())  ##该表包含的所有TopicRule数量，rowspan值
+			#set($topicRuleList=$tableRule.sortedTopicRuleList()) ##该表包含的所有TopicRule列表，已按照topicName排序
+			#set($index=0)  ##每个<tr>元素在每个表中的排序
+			#foreach($topicRule in $topicRuleList) 
+				#set($index=$index+1) 
+				##显示每条TopicRule，一个<tr>元素代表一个TopicRule，其中有些<td>需要通过rowspan合并
+				<tr> 
+		 			##以下<td>为隐藏，为了js中能获取到相应的值
+		 			<td class="tdBizNameClass" hidden="true">$bizName</td>
+		 			<td class="tdTableNameClass" hidden="true">$tableRule.tableName</td>
+		 			<td class="tdTopicRuleIdClass" hidden="true">$topicRule.id</td>
+		 			
+		 			##表名
+		 			#if($index==1)
+		 				<td align="center" style="vertical-align:middle;" rowspan="$topicCount">$topicRule.tableName</td>
+	 				#end
+					
+					##主题名
+					<td class="topicName">$topicRule.topicName</td>
+					
+					##事件类型
+					<td class="">
+						#if($topicRule.eventType=="UPDATE")
+							<span class="btn-success">更新</span>
+							<br>[#if($topicRule.pushBeforeData)推送#else不推送#end]
+						#else
+							#if($topicRule.eventType=="INSERT")
+								<span class="btn-warning">插入</span>
+							#else
+								<span class="btn-danger">删除</span>
+							#end
+						#end
+					</td>
+					
+					##字段规则，该<td>内包含一个<table>
+					<td>
+						#set($fieldRules=$topicRule.getFieldRuleList())
+						#if($fieldRules.size()>0)
+							<table class="table table-bordered">
+								<thead>
+									<tr class="btn-primary">
+										#if($topicRule.eventType=="UPDATE")<th align="center">位置</th>#end 
+										<th align="center">字段名</th>
+										<th align="center">操作</th>
+										<th align="center">字段值</th>
+										#if($topicRule.eventType=="UPDATE")<th align="center">必须变更</th>#end
+									</tr>
+								</thead>
+								<tbody>
+									#foreach($fieldRule in $fieldRules)   
+										<tr class="success">
+											#if($topicRule.eventType=="UPDATE")<th align="center">#if($fieldRule.beforeOrAfter=="after")更新后#else更新前#end</th>#end
+											<td>$fieldRule.name</td>
+											<td>$fieldRule.operator</td>
+											<td>$fieldRule.value</td>
+											#if($topicRule.eventType=="UPDATE")<th align="center">#if($fieldRule.isMustUpdated())是#else否#end</th>#end
+										</tr> 
+									#end
+								</tbody>
+							</table>
+						#end
+					</td> 
+					
+						
+					##输出字段，该<td>内包含一个<table>
+					<td>
+						#set($outFieldNames=$topicRule.getOutFieldList())
+						#if($outFieldNames.size()>0)
+							<table class="table table-bordered">
+								<tbody>
+									#if($topicRule.outFieldIgnore)<tr class="danger"> #else <tr class="success"> #end
+										#foreach($outFieldName in $outFieldNames)   
+											<td>$outFieldName</td>
+										#end
+									</tr> 
+								</tbody>
+							</table>
+						#end
+					</td> 
+					
+					##规则操作td 
+					<td align="center" style="vertical-align:middle;">
+						<button type="button" class="btn btn-primary btn_editRuleClass">编辑</button>
+						#if($topicRule.isActive()) 
+							<button type="button" class="btn btn-primary btn_onOffRule">暂停</button>
+						#else
+							<button type="button" class="btn btn-danger btn_onOffRule">恢复</button>
+							<button type="button" class="btn btn-primary btn_removeRule">删除</button> 
+						#end
+					</td> 
+					
+					##表操作td只在第一行才有
+		 			#if($index==1) 
+						<td align="center" style="vertical-align:middle;" rowspan="$topicCount">
+							#if($tableRule.isActive()) 
+								<button type="button" class="btn btn-primary btn_onOffTable">暂停</button>
+							#else
+								<button type="button" class="btn btn-danger btn_onOffTable">恢复</button>
+								<button type="button" class="btn btn-primary btn_removeTable">删除</button>
+							#end 
+						</td>
+					#end
+				</tr>  
+			#end  
+		#end
+	</tbody>
+</table>
+#end
+</div>
+</div>
+</div>

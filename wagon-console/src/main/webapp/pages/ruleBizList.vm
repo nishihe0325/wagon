@@ -1,0 +1,84 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				业务列表
+				<a class="navbar-right" href="addRuleBiz">
+					<button type="button" class="btn btn-xs btn-warning">新建</button>&nbsp &nbsp &nbsp &nbsp
+				</a> 
+			</div>
+			<form class="form-inline" role="jobForm" method="post" action="/ruleBizList">
+				<table class="table table-hover">
+					<tbody>
+						<!-- query condition start-->
+						<tr>
+							<td>
+								<label><font color="#08C">业务名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="bizName" value="$!ruleBizInfo.bizName">
+								</div>
+							</td> 
+							<td>
+								<label><font color="#08C">每页显示:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="pageSize">
+										<option value="10" #if($!ruleBizInfo.pageSize=="10") selected="selected" #end>10</option>
+										<option value="20" #if($!ruleBizInfo.pageSize=="20") selected="selected" #end>20</option>
+										<option value="50" #if($!ruleBizInfo.pageSize=="50") selected="selected" #end>50</option>
+										<option value="100" #if($!ruleBizInfo.pageSize=="100") selected="selected" #end>100</option>
+										<option value="1000" #if($!ruleBizInfo.pageSize=="1000") selected="selected" #end>1000</option>
+									</select>
+								</div>
+							</td> 
+							<td>
+								<div class="form-group">
+									<button type="submit" class="btn btn-info">查询</button>
+								</div>
+							</td>
+						</tr>
+						<!-- query condition end-->
+						
+						
+						<!-- query result start-->
+						#if($ruleBizInfos)
+							<tr>
+								<td colspan="3">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>业务名</th>
+												<th>版本</th>
+												<th>创建时间</th>
+												<th>更新时间</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+							     			#foreach($ruleBizInfo in $ruleBizInfos)
+												<tr>
+													<td><a href="ruleList?bizName=$!{ruleBizInfo.bizName}">$!{ruleBizInfo.bizName}</a></td> 
+													<td>$!ruleBizInfo.version</td>
+													<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!ruleBizInfo.createTime)</td>
+													<td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!ruleBizInfo.modifyTime)</td>
+													<td style="width:12%">
+														<div class="form-group">
+															<a href="updateRuleBizVersion?id=$!ruleBizInfo.id"><button type="button" class="btn btn-warning btn-xs" onClick="showcfm()">更新版本</button></a>
+														</div>
+														<div class="form-group">
+															<a href="removeRuleBiz?id=$!ruleBizInfo.id"><button type="button" class="btn btn-danger btn-xs" onClick="showcfm()">删除</button></a>
+														</div>
+													</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+						<!-- query result end-->
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 

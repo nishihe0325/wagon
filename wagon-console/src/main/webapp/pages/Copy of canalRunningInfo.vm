@@ -1,0 +1,161 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">canal客户端消费位点查询</div>
+			<form class="form-inline" role="jobForm" method="post" action="/canalRunningInfo">
+				<table class="table table-hover">
+					<tbody>
+						<!-- query condition start-->
+						<tr>
+							<td> <label><font color="#DC483A">canal主机:</font></label>
+								<div class="form-group"> <input type="text" class="form-control" name="canalAddress" value="$!businessName" id="canalAddress" size="30" placeholder="不填则显示所有，格式：host:port"></div>
+							</td>
+							<td> <label><font color="#DC483A">canal端口:</font></label>
+								<div class="form-group"> <input type="text" class="form-control" name="canalAddress" value="$!businessName" id="canalAddress" size="30" placeholder="不填则显示所有，格式：host:port"></div>
+							</td>
+						</tr>
+						<tr>
+							<td> <label><font color="#DC483A">数据库主机:</font></label>
+								<div class="form-group"> <input type="text" class="form-control" name="canalDestination" id="canalAddress" value="$!canalAddress" placeholder="不填则所有实例"></div>
+							</td>
+							<td> <label><font color="#DC483A">数据库端口:</font></label>
+								<div class="form-group"> <input type="text" class="form-control" name="canalDestination" id="canalAddress" value="$!canalAddress" placeholder="不填则所有实例"></div>
+							</td>
+						</tr>
+						<tr>
+							<td><label><font color="#08C">查询条数limit:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="limit" id="limit">
+										<option value="10">10</option>
+										<option value="20">20</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+										<option value="1000">1000</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
+									<button type="submit" class="btn btn-info" name="jobButton" value="canalRunningInfo">查询</button>
+								</div>
+							</td>
+						</tr>
+						<!-- query condition end-->
+						
+						<!-- query result start-->
+						#if($runningDataMap && $runningDataMap.size() > 0)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+									    <thead>
+											<tr class="active">
+												<th>实例名</th>
+												
+												<th>mysql位点</th>
+												<th>dump位点</th>
+												<th>消费位点</th>
+												
+												<th>最大条数</th>
+												<th>已存条数</th>
+												<th>剩余条数</th>
+												
+												<th>最大容量</th>
+												<th>已存大小</th>
+												<th>剩余容量</th>
+												
+												<th>消费延时</th>
+											</tr>
+										</thead>
+										<tbody> 
+										    #foreach($entry in $runningDataMap.entrySet())
+										    	#set($canalAddress=$entry.key)
+										    	#set($serverData=$entry.value)
+											    [${serverData.canalHostName}]服务的运行信息
+											    <table class="table table-bordered table-hover">
+											    
+											    
+												<tbody>
+													#foreach($instancEntry in $serverData.instanceRunningDatas.entrySet())
+													sddddddd
+										    	        #set($curData=$instancEntry.value)
+										    	        
+										    	        #set($binlogPosition=$curData.binlogPosition.postion)
+										    	        #set($dumpLogPosition=$curData.dumpLogPosition.postion)
+										    	        #set($consumedLogPosition=$curData.consumedLogPosition.postion)
+										    	        
+										    	        #set($jName_b=${binlogPosition.journalName})
+										    	        #set($jName_b=$jName_b.substring($jName_b.indexOf('.'),$jName_b.length()))
+										    	        #set($jName_b=$jName_b.substring(1,$jName_b.length()))
+										    	        
+										    	        #set($jName_d=${binlogPosition.journalName})
+										    	        #set($jName_d=$jName_d.substring($jName_d.indexOf('.'),$jName_d.length()))
+										    	        #set($jName_d=$jName_d.substring(1,$jName_d.length()))
+										    	        
+										    	        #set($jName_c=${binlogPosition.journalName})
+										    	        #set($jName_c=$jName_c.substring($jName_c.indexOf('.'),$jName_c.length()))
+										    	        #set($jName_c=$jName_c.substring(1,$jName_c.length()))
+										    	        
+										    	        #set($totalBufferSize=$!curData.totalBufferSize / 1024)
+										    	        #set($usedBufferSize=$!curData.usedBufferSize / 1024)
+										    	        #set($remainBufferSize=$!curData.remainBufferSize / 1024)
+														<tr>
+															<td>$instancEntry.key</td> <!-- 实例名 -->
+															
+															<td>$!jName_b:$!binlogPosition.position 
+																<br/>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!binlogPosition.timestamp)
+															</td> <!-- mysql位点 -->
+															
+															<td>$!jName_d:$!dumpLogPosition.position 
+																<br/>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!dumpLogPosition.timestamp)
+															</td> <!-- dump位点 -->
+															
+															<td>$!jName_c:$!consumedLogPosition.position 
+																<br/>$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!consumedLogPosition.timestamp)
+															</td> <!-- 消费位点 -->
+															
+															<td>$!curData.totalBufferSize</td> <!-- 最大条数 -->
+															<td>$!curData.usedBufferSize</td> <!-- 已存条数 -->
+															
+															<td>
+																#if($!curData.remainBufferSize<1000)
+																	<font color="#DC483A">$!curData.remainBufferSize</td></font>
+																#else
+																	$!curData.remainBufferSize</td>
+																#end
+															</td> <!-- 剩余条数 -->
+															
+															<td>$!curData.totalBufferCapacity</td> <!-- 最大容量 -->
+															<td>$!curData.usedBufferCapacity</td> <!-- 已用大小 -->
+															
+															<td>
+																#if($!curData.remainBufferCapacity<1000000)
+																	<font color="#DC483A">$!curData.remainBufferCapacity</td></font>
+																#else
+																	$!curData.remainBufferCapacity</td>
+																#end
+															</td> <!-- 剩余容量 -->
+															
+															<td>
+																#if($!curData.delay>1000000)
+																	<font color="#DC483A">$!curData.delayDes</font>
+																#else
+																	$!curData.delayDes
+																#end
+															</td> <!-- 消费延时 -->
+														</tr>
+													#end
+												</tbody>
+												</table>
+										    #end
+										</tbody>	
+									</table>
+								</td>
+							</tr>
+						#end
+						<!-- query result end-->
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>

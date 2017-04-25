@@ -1,0 +1,619 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				编辑
+				<div class="form-group navbar-right">
+					<button id="showLogicFieldButtonId" type='button' class='btn btn-info btn-xs'>逻辑字段</button> &nbsp &nbsp
+				</div>
+				<div class="form-group navbar-right">
+					<button id="showOutFieldButtonId" type='button' class='btn btn-info btn-xs'>输出字段</button> &nbsp &nbsp
+				</div>
+				<div class="form-group navbar-right">
+					<button id="showRuleFieldButtonId" type='button' class='btn btn-info btn-xs'>规则字段</button> &nbsp &nbsp
+				</div>
+                <div class="form-group navbar-right">
+                    <button id="otherAttrBtnId" type='button' class='btn btn-info btn-xs'>其他属性</button> &nbsp &nbsp
+                </div>
+			</div>
+			<form class="form-inline" method="post" action="/updateRule">
+				<input name="id" type="text" hidden="true" value="$!ruleInfo.id">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>
+								<label><font color="#08C">业 务 名:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="bizName">
+										#foreach($ruleBizInfo in $!ruleBizInfos)
+											<option value="$!ruleBizInfo.bizName" #if($!ruleBizInfo.bizName==$!ruleInfo.bizName) selected="selected" #end>$!ruleBizInfo.bizName</option>
+										#end
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">表 &nbsp &nbsp &nbsp &nbsp名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="tableName" value="$!ruleInfo.tableName">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">主 题 名:</font></label>
+								<div class="form-group">
+									<input type="text" class="form-control" name="topicName" value="$!ruleInfo.topicName" style="width:200%">
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">事件类型:</font></label>
+								<div class="form-group">
+									<select name="eventType" class="form-control eventTypeClass" multiple class="chosen-select" data-placeholder="请选择事件类型" style="width:350px;"> 
+										<option value="-1"></option>
+										#foreach($eventType in $!selectedEventTypes)
+											<option value="$!eventType" selected="selected">$!eventType</option>
+										#end
+										#foreach($eventType in $!noSelectedEventTypes)
+											<option value="$!eventType">$!eventType</option>
+										#end
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><font color="#08C">启用状态:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="enableState">
+										<option value="1" #if($!ruleInfo.enableState=="1") selected="selected" #end>启用</option>
+										<option value="2" #if($!ruleInfo.enableState=="2") selected="selected" #end>暂停</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">完整信息:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="pushDataType">
+										<option value="1" #if($!ruleInfo.pushDataType=="1") selected="selected" #end>是</option>
+										<option value="2" #if($!ruleInfo.pushDataType=="2") selected="selected" #end>否</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr id="conditionOrOutFieldRelaTRId" #if($!showConditionOrOutFieldRela=="true") #else hidden="true" #end>
+							<td>
+								<label><font color="#08C">字段关系:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="fieldConditionType">
+										<option value="1" #if($!ruleInfo.fieldConditionType=="1") selected="selected" #end>与</option>
+										<option value="2" #if($!ruleInfo.fieldConditionType=="2") selected="selected" #end>或</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<label><font color="#08C">字段输出:</font></label>
+								<div class="form-group">
+									<select class="form-control" name="outType">
+										<option value="1" #if($!ruleInfo.outType==1) selected="selected" #end>忽略</option>
+										<option value="2" #if($!ruleInfo.outType==2) selected="selected" #end>包含</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+                        <tr class="otherAttrFieldTRClass" #if($!showOtherAttr=="true")#else hidden="true" #end>
+                            <td>
+                                <label><font color="#08C">顺序字段:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="seqConsumeField" value="$!ruleInfo.seqConsumeField">
+                                </div>
+                            </td>
+                            <td>
+                                <label><font color="#08C">数据库名:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="schemaName" value="$!ruleInfo.schemaName">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="otherAttrFieldTRClass" #if($!showOtherAttr=="true")#else hidden="true" #end>
+                            <td colspan="2">
+                                <label><font color="#08C">重试次数:</font></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="maxRetryCount" value="$!ruleInfo.maxRetryCount">
+                                </div>
+                            </td>
+                        </tr>
+						<tr>
+							<td colspan="2">
+								<div class="form-group navbar-right">
+									<button type="submit" class="btn  btn-xs btn-warning" onClick="showcfm()">保存</button> &nbsp &nbsp &nbsp &nbsp
+								</div>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##规则字段
+<div class="row" id="ruleFieldRowId" #if($!showFieldRow=="true") #else hidden="true" #end>
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<button id="addRuleFieldButtonId" type="button" class="btn btn-info btn-xs">增加条件字段</button>
+			</div>
+			<form class="form-inline" method="post">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td colspan="2">
+								<div class="form-group">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>字段位置</th>
+												<th>字段名称</th>
+												<th>操作</th>
+												<th>字段值</th>
+												<th>是否必须更新</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody id="ruleFieldTableBodyId"> 
+											#foreach($ruleFieldInfo in $ruleFieldInfos)
+												<tr class="ruleFieldTRClass">
+													<td hidden="true"><input type="text" name="id" value="$!ruleFieldInfo.id"></td>
+													<td hidden="true"><input type="text" name="ruleId" value="$!ruleInfo.id"></td>
+													<td hidden="true"><input type="text" name="bizName" value="$!ruleInfo.bizName"></td>
+													<td hidden="true"><input type="text" name="tableName" value="$!ruleInfo.tableName"></td>
+													<td hidden="true"><input type="text" name="topicName" value="$!ruleInfo.topicName"></td>
+													<td>
+														<div class='form-group'>
+															<select class='form-control' name='positionType' value="$!ruleFieldInfo.positionType">
+																<option value='1' #if($!ruleFieldInfo.positionType=="1")selected = "selected" #end>更新后</option>
+																<option value='2' #if($!ruleFieldInfo.positionType=="2")selected = "selected" #end>更新前</option>
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class='form-group'>
+															<input type='text' class='form-control' name='fieldName' value="$!ruleFieldInfo.fieldName">
+														</div>
+													</td>
+													<td>
+														<div class='form-group'>
+															<select class='form-control' name='fieldOperator' value="$!ruleFieldInfo.fieldOperator">
+																<option value='=' #if($!ruleFieldInfo.fieldOperator=="=")selected = "selected" #end>等于</option>
+																<option value='!=' #if($!ruleFieldInfo.fieldOperator=="!=")selected = "selected" #end>不等于</option>
+																<option value='>' #if($!ruleFieldInfo.fieldOperator==">")selected = "selected" #end>大于</option>
+																<option value='>=' #if($!ruleFieldInfo.fieldOperator==">=")selected = "selected" #end>大于等于</option>
+																<option value='<' #if($!ruleFieldInfo.fieldOperator=="<")selected = "selected" #end>小于</option>
+																<option value='<=' #if($!ruleFieldInfo.fieldOperator=="<=")selected = "selected" #end>小于等于</option>
+																<option value='in' #if($!ruleFieldInfo.fieldOperator=="in")selected = "selected" #end>in</option>
+																<option value='empty' #if($!ruleFieldInfo.fieldOperator=="empty")selected = "selected" #end>为空</option>
+																<option value='notEmpty' #if($!ruleFieldInfo.fieldOperator=="notEmpty")selected = "selected" #end>非空</option>
+																<option value='updated' #if($!ruleFieldInfo.fieldOperator=="updated")selected = "selected" #end>有更新</option>
+																<option value='module' #if($!ruleFieldInfo.fieldOperator=="module")selected = "selected" #end>取模</option>
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class='form-group'>
+															<input type='text' class='form-control' name='fieldValue' value="$!ruleFieldInfo.fieldValue">
+														</div>
+													</td>
+													<td>
+														<div class='form-group'>
+															<select class='form-control' name='mustUpdated' value="$!ruleFieldInfo.mustUpdated">
+																<option value='false' #if($!ruleFieldInfo.mustUpdated=="false")selected = "selected" #end>否</option>";
+																<option value='true' #if($!ruleFieldInfo.mustUpdated=="true")selected = "selected" #end>是</option>";
+															</select>
+														</div>
+													</td>
+													<td>
+														<button type='button' class='btn btn-warning btn-xs commitRuleFieldButtonClass'>提交</button>
+														<button type='button' class='btn btn-danger btn-xs removeRuleFieldClass'>删除</button>
+													</td>
+												</tr> 
+											#end
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##输出字段
+<div class="row" id="outFieldRowId" #if($!showOutFieldRow=="true") #else hidden="true" #end>
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<button id="addOutFieldButtonId" type="button" class="btn btn-info btn-xs">增加字段</button>
+			</div>
+			<form class="form-inline" method="post">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td colspan="2">
+								<div class="form-group">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>字段名称</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody id="outFieldTableBodyId">
+											#foreach($ruleOutFieldInfo in $ruleOutFieldInfos)
+												<tr class="outFieldTRClass">
+													<td hidden="true"><input type="text" name="id" value="$!ruleOutFieldInfo.id"></td>
+													<td hidden="true"><input type="text" name="ruleId" value="$!ruleInfo.id"></td>
+													<td hidden="true"><input type="text" name="bizName" value="$!ruleInfo.bizName"></td>
+													<td hidden="true"><input type="text" name="tableName" value="$!ruleInfo.tableName"></td>
+													<td hidden="true"><input type="text" name="topicName" value="$!ruleInfo.topicName"></td>
+													<td width='40%'>
+														<div class='form-group'>
+															<input type='text' class='form-control' name='fieldName' value="$!ruleOutFieldInfo.fieldName">
+														</div>
+													</td>
+											   		<td>
+										   				<button type='button' class='btn btn-warning btn-xs commitOutFieldButtonClass' onClick="showcfm()">提交</button>
+														<button type='button' class='btn btn-danger btn-xs removeOutFieldClass'>删除</button>
+													</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>   
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+##逻辑字段
+<div class="row" id="logicFieldRowId" #if($!showLogicFieldRow=="true") #else hidden="true" #end>
+	<div class="col-md-12">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<button id="addLogicFieldButtonId" type="button" class="btn btn-info btn-xs">增加逻字段</button>
+			</div>
+			<form class="form-inline" method="post">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td colspan="2">
+								<div class="form-group">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>字段名称</th>
+												<th>数据类型</th>
+												<th>操作</th>
+												<th>操作值</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody id="logicFieldTableBodyId"> 
+											#foreach($ruleLogicFieldInfo in $ruleLogicFieldInfos)
+												<tr class="logicFieldTRClass">
+													<td hidden="true"><input type="text" name="id" value="$!ruleLogicFieldInfo.id"></td>
+													<td hidden="true"><input type="text" name="ruleId" value="$!ruleInfo.id"></td>
+													<td hidden="true"><input type="text" name="bizName" value="$!ruleInfo.bizName"></td>
+													<td hidden="true"><input type="text" name="tableName" value="$!ruleInfo.tableName"></td>
+													<td hidden="true"><input type="text" name="topicName" value="$!ruleInfo.topicName"></td>
+													<td>
+														<div class='form-group'>
+															<input type='text' class='form-control' name='fieldName' value="$!ruleLogicFieldInfo.fieldName">
+														</div>
+													</td><td>
+                                                    <div class='form-group'>
+                                                        <input type='text' class='form-control' name='dataType' value="$!ruleLogicFieldInfo.dataType">
+                                                    </div>
+                                                </td>
+													<td>
+														<div class='form-group'>
+															<select class='form-control' name='fieldOperator' value="$!ruleLogicFieldInfo.fieldOperator">
+																<option value='new' #if($!ruleLogicFieldInfo.fieldOperator=="new")selected = "selected" #end>新加</option>
+																<option value='fix' #if($!ruleLogicFieldInfo.fieldOperator=="fix")selected = "selected" #end>固定值</option>
+																<option value='plus' #if($!ruleLogicFieldInfo.fieldOperator=="plus")selected = "selected" #end>增加</option>
+																<option value='subtract' #if($!ruleLogicFieldInfo.fieldOperator=="subtract")selected = "selected" #end>减少</option>
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class='form-group'>
+															<input type='text' class='form-control' name='fieldValue' value="$!ruleLogicFieldInfo.fieldValue">
+														</div>
+													</td>
+													<td>
+														<button type='button' class='btn btn-warning btn-xs commitLogicFieldButtonClass'>提交</button>
+														<button type='button' class='btn btn-danger btn-xs removeLogicFieldClass'>删除</button>
+													</td>
+												</tr> 
+											#end
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+$(document).ready(function() {
+	######################################################################################################
+	##显示顺序消费字段
+    $("#otherAttrBtnId").click(function(){
+        $(".otherAttrFieldTRClass").attr("hidden",false);
+    });
+
+	##显示规则字段
+	$("#showRuleFieldButtonId").click(function(){
+		$("#ruleFieldRowId").attr("hidden",false);
+		$("#conditionOrOutFieldRelaTRId").attr("hidden",false);
+	}); 
+	
+	##新增规则字段输入行
+	$("#addRuleFieldButtonId").click(function(){
+		var tr = $(".ruleFieldTRClass:first");
+		var tr = "<tr><td hidden='true'><input type='text' name='addOrEditType' value='add'></td>" + tr.html() + "</tr>";
+		$("#ruleFieldTableBodyId").append(tr);
+	}); 
+	
+	##提交规则字段
+	$(document).on("click",".commitRuleFieldButtonClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/addOrEditFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"addOrEditType":tr.find($("[name=addOrEditType]")).val(),
+				"id":tr.find($("[name=id]")).val(),
+				"ruleId":tr.find($("[name=ruleId]")).val(),
+				"bizName":tr.find($("[name=bizName]")).val(),
+				"tableName":tr.find($("[name=tableName]")).val(),
+				"topicName":tr.find($("[name=topicName]")).val(),
+				"positionType":tr.find($("[name=positionType]")).val(),
+				"fieldName":tr.find($("[name=fieldName]")).val(),
+				"fieldOperator":tr.find($("[name=fieldOperator]")).val(),
+				"fieldValue":tr.find($("[name=fieldValue]")).val(),
+				"mustUpdated":tr.find($("[name=mustUpdated]")).val()
+			},
+			error: function(msg){
+				alert("增加失败："+msg);
+			}, 
+			success: function(msg){ 
+				window.location.href ="/editRule?id=$!ruleInfo.id"; 
+			} 
+		}); 
+	});
+	
+	##删除规则字段
+	$(document).on("click",".removeRuleFieldClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/removeRuleFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"id":tr.find($("[name=id]")).val(),
+				"addOrEditType":tr.find($("[name=addOrEditType]")).val()
+			},
+			error: function(msg){
+				alert("删除失败："+msg);
+			}, 
+			success: function(msg){ 
+				tr.remove();
+			} 
+		});
+	});  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	######################################################################################################
+	##显示输出字段
+	$("#showOutFieldButtonId").click(function(){
+		$("#outFieldRowId").attr("hidden",false);
+		$("#conditionOrOutFieldRelaTRId").attr("hidden",false);
+	}); 
+	
+	##新增输出字段输入行
+	$("#addOutFieldButtonId").click(function(){
+		var tr =$(".outFieldTRClass:first");
+		var tr = "<tr><td hidden='true'><input type='text' name='addOrEditType' value='add'></td>" + tr.html() + "</tr>";
+		$("#outFieldTableBodyId").append(tr);
+	}); 
+	
+	##提交输出字段
+	$(document).on("click",".commitOutFieldButtonClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/addOrEditOutFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"addOrEditType":tr.find($("[name=addOrEditType]")).val(),
+				"id":tr.find($("[name=id]")).val(),
+				"ruleId":tr.find($("[name=ruleId]")).val(),
+				"bizName":tr.find($("[name=bizName]")).val(),
+				"tableName":tr.find($("[name=tableName]")).val(),
+				"topicName":tr.find($("[name=topicName]")).val(),
+				"fieldName":tr.find($("[name=fieldName]")).val()
+			},
+			error: function(msg){
+				alert("增加失败："+msg);
+			}, 
+			success: function(msg){ 
+				window.location.href ="/editRule?id=$!ruleInfo.id"; 
+			} 
+		}); 
+	});
+	
+	##删除输出字段
+	$(document).on("click",".removeOutFieldClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/removeOutFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"id":tr.find($("[name=id]")).val(),
+				"addOrEditType":tr.find($("[name=addOrEditType]")).val()
+			},
+			error: function(msg){
+				alert("增加失败："+msg);
+			}, 
+			success: function(msg){ 
+				tr.remove();
+			} 
+		});
+	});  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	######################################################################################################
+	##显示逻辑字段
+	$("#showLogicFieldButtonId").click(function(){
+		$("#logicFieldRowId").attr("hidden",false);
+	}); 
+	
+	##新增逻辑字段输入行
+	$("#addLogicFieldButtonId").click(function(){
+		var tr =$(".logicFieldTRClass:first");
+		var tr = "<tr><td hidden='true'><input type='text' name='addOrEditType' value='add'></td>" + tr.html() + "</tr>";
+		$("#logicFieldTableBodyId").append(tr);
+	}); 
+	
+	##提交逻辑字段
+	$(document).on("click",".commitLogicFieldButtonClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/addLogicFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"id":tr.find($("[name=id]")).val(),
+				"ruleId":tr.find($("[name=ruleId]")).val(),
+				"bizName":tr.find($("[name=bizName]")).val(),
+				"dataType":tr.find($("[name=dataType]")).val(),
+				"tableName":tr.find($("[name=tableName]")).val(),
+				"topicName":tr.find($("[name=topicName]")).val(),
+				"fieldName":tr.find($("[name=fieldName]")).val(),
+				"fieldOperator":tr.find($("[name=fieldOperator]")).val(),
+				"fieldValue":tr.find($("[name=fieldValue]")).val()
+			},
+			error: function(msg){
+				alert("增加失败："+msg);
+			}, 
+			success: function(msg){ 
+				window.location.href ="/editRule?id=$!ruleInfo.id"; 
+			} 
+		}); 
+	});
+	
+	##删除逻辑字段
+	$(document).on("click",".removeLogicFieldClass",function(){
+		var tr=$(this).parent().parent();
+		$.ajax({ 
+			url:'/removeLogicFiled', 
+			type:'post',  
+			dataType:'html', 
+			data:{
+				"id":tr.find($("[name=id]")).val()
+			},
+			error: function(msg){
+				alert("删除失败："+msg);
+			}, 
+			success: function(msg){ 
+				tr.remove();
+			} 
+		});
+	}); 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	######################################################################################################
+	$('.eventTypeClass').chosen({
+	    no_results_text:"没有找到",
+	    allow_single_deselect:true
+	});    
+});
+</script>

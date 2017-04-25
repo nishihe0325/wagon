@@ -1,0 +1,101 @@
+<configuration scan="true" scanPeriod=" 5 seconds">
+    <jmxConfigurator />
+    <property name="LOG_HOME" value="${log.path}" />
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{56} - %msg%n" />
+    <property name="PATTERN_SIMPLE" value="%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROOT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>destination</Key>
+            <DefaultValue>wagon</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-WAGON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/wagon/wagon.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/wagon/%d{yyyy-MM-dd}/wagon-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="HEARTBEAT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>destination</Key>
+            <DefaultValue>heartbeat</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-HEARTBEAT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/heartbeat/heartbeat.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/heartbeat/%d{yyyy-MM-dd}/heartbeat-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN_SIMPLE}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>logType</Key>
+            <DefaultValue>error</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>${LOG_HOME}/error/error.log</File>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_HOME}/error/%d{yyyy-MM-dd}/error-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>32MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>10</maxHistory>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>${PATTERN}</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="com.alibaba" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="ROOT" />
+    </logger>
+
+    <logger name="com.youzan.wagon" additivity="false">
+        <level value="${log.level}" />
+        <appender-ref ref="ROOT" />
+    </logger>
+    <logger name="HEARTBEAT" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="HEARTBEAT" />
+    </logger>
+
+    <logger name="ERROR" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="ERROR" />
+    </logger>
+
+    <root level="${log.level}">
+        <appender-ref ref="${log.appender}" />
+    </root>
+</configuration>

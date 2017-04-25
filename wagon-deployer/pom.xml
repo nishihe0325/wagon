@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal</artifactId>
+        <version>${canal_version}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <groupId>com.youzan.wagon</groupId>
+    <artifactId>wagon-deployer</artifactId>
+    <version>${wagon_proxy_version}</version>
+
+    <dependencies>
+        <!-- wagon -->
+        <dependency>
+            <groupId>com.youzan.wagon</groupId>
+            <artifactId>wagon-filter</artifactId>
+            <version>${wagon_proxy_version}</version>
+        </dependency>
+
+        <!-- canal -->
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.extend.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.deployer</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin_version}</version>
+                <configuration>
+                    <source>${java_source_version}</source>
+                    <target>${java_target_version}</target>
+                    <encoding>${file_encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin_version}</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/release.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

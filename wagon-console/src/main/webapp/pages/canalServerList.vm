@@ -1,0 +1,117 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				canal服务信息
+	        	<a class="navbar-right" data-toggle="collapse" data-parent="#accordion" href="#queryConditionId">高级查询</a>
+			</div>
+			<form class="form-inline" role="jobForm" method="post" action="/canalServerList">
+				<table class="table table-hover">
+					<tbody>
+						
+					
+					
+					
+											
+											
+						<!-- query condition start-->
+						<tr>
+							<td colspan="2">
+								<div class="panel-group" id="accordion">
+							    	<div id="queryConditionId" class="panel-collapse collapse">
+							      		<div class="panel-body">
+							        		<table class="table table-bordered table-hover">
+												<tbody>
+													<tr>
+														<td width="50%"> <label><font color="#DC483A">主机ip:</font></label>
+															<div class="form-group"> 
+																<input type="text" class="form-control" name="canalHost" value="$!canalHost" size="50">
+															</div>
+														</td>
+														<td width="50%"> <label><font color="#DC483A">端口:</font></label>
+															<div class="form-group"> 
+																<input type="text" class="form-control" name="canalPort" value="$!canalPort" size="50">
+															</div>
+														</td>
+													</tr> 
+													<tr>
+														<td colspan="2"> <label><font color="#DC483A">主机名称:</font></label>
+															<div class="form-group"> 
+																<input type="text" class="form-control" name="canalHostName" value="$!canalHostName" size="50">
+															</div>
+														</td>
+													</tr> 
+													<tr>
+														<td><label><font color="#08C">查询条数limit:</font></label>
+															<div class="form-group">
+																<select class="form-control" name="limit" id="limit">
+																	<option value="10">10</option>
+																	<option value="20">20</option>
+																	<option value="50">50</option>
+																	<option value="100">100</option>
+																	<option value="1000">1000</option>
+																</select>
+															</div>
+														</td>
+														<td>
+															<div class="form-group">
+																<button type="submit" class="btn btn-info" name="jobButton" value="canalInstanceList">查询</button>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+							      		</div>
+							    	</div>
+								</div>
+							</td>
+						</tr>
+						<!-- query condition end-->
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						<!-- query result start-->
+						#if($canalServers)
+							<tr>
+								<td colspan="2">
+									<table class="table table-bordered table-hover">
+										<thead>
+											<tr class="active">
+												<th>主机名</th>
+												<th>ip</th>
+												<th>端口</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+							     			#foreach($canalServer in $canalServers)
+												<tr>
+													<td>$!{canalServer.canalHostName}</td>
+													<td>$!{canalServer.canalHost}</td>
+													<td>$!{canalServer.canalPort}</td>
+													<td>
+														<a href="canalInstanceList?canalHost=$!{canalServer.canalHost}&canalPort=$!{canalServer.canalPort}">
+															<button type="button" class="btn btn-info btn-xs">实例</button>
+														</a>
+													</td>
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						#end
+						<!-- query result end-->
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div> 
